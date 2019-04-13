@@ -6,8 +6,10 @@ export const GET_ALL_POSTS = "GET_ALL_POSTS",
   SIGNOUT_USER = "SIGNOUT_USER",
   REFRESH_SESSION = "REFRESH_SESSION";
 
+const ROOT_URL = "ec2-3-120-138-39.eu-central-1.compute.amazonaws.com:8000";
+
 export const getAllPosts = () => dispatch => {
-  fetch("http://localhost:8000/allPosts", {
+  fetch(`${ROOT_URL}/allPosts`, {
     method: "GET",
     headers: { "Content-Type": "application/json" }
   })
@@ -17,7 +19,7 @@ export const getAllPosts = () => dispatch => {
 };
 
 export const getPost = id => dispatch => {
-  fetch(`http://localhost:8000/getPost/${id}`, {
+  fetch(`${ROOT_URL}/getPost/${id}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" }
   })
@@ -34,7 +36,7 @@ export const createPost = (
   content,
   redirect
 ) => dispatch => {
-  fetch("http://localhost:8000/createPost", {
+  fetch(`${ROOT_URL}/createPost`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, author, idToken, title, content })
@@ -52,7 +54,7 @@ export const updatePost = (
   title,
   content
 ) => dispatch => {
-  fetch("http://localhost:8000/updatePost", {
+  fetch(`${ROOT_URL}/updatePost`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ id, username, author, idToken, title, content })
@@ -63,7 +65,7 @@ export const updatePost = (
 };
 
 export const deletePost = (id, username, idToken, redirect) => dispatch => {
-  fetch("http://localhost:8000/deletePost", {
+  fetch(`${ROOT_URL}/deletePost`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ id, username, idToken })
@@ -77,7 +79,7 @@ export const deletePost = (id, username, idToken, redirect) => dispatch => {
 };
 
 export const signupUser = (name, email, password) => dispatch => {
-  fetch("http://localhost:8000/signup", {
+  fetch(`${ROOT_URL}/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name, password, username: email })
@@ -88,7 +90,7 @@ export const signupUser = (name, email, password) => dispatch => {
 };
 
 export const signinUser = (username, password) => dispatch => {
-  fetch("http://localhost:8000/signin", {
+  fetch(`${ROOT_URL}/signin`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password })
@@ -99,7 +101,7 @@ export const signinUser = (username, password) => dispatch => {
 };
 
 export const refreshSession = () => dispatch => {
-  fetch("http://localhost:8000/refreshSession", {
+  fetch(`${ROOT_URL}/refreshSession`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
