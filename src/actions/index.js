@@ -16,7 +16,7 @@ export const getAllPosts = () => dispatch => {
     .catch(e => {});
 };
 
-export const getPost = (id, author) => dispatch => {
+export const getPost = id => dispatch => {
   fetch(`http://localhost:8000/getPost/${id}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" }
