@@ -1,13 +1,17 @@
 import { GET_ALL_POSTS, UPDATE_POST, DELETE_POST } from "../actions";
 
+const EMPTY_STRING = "EMPTY_STRING";
+
 const getAllPosts = payload => {
   if (payload && payload.length) {
     return payload.reduce((acc, curr) => {
-      const { id, title, content } = curr;
+      const { id, username, author, title, content } = curr;
       acc[id] = {
         id,
-        title: title === "EMPTY_STRING" ? "" : title,
-        content: content === "EMPTY_STRING" ? "" : content
+        username,
+        author,
+        title: title === EMPTY_STRING ? "" : title,
+        content: content === EMPTY_STRING ? "" : content
       };
       return acc;
     }, {});
@@ -15,8 +19,8 @@ const getAllPosts = payload => {
 };
 
 const updatePost = (state, payload) => {
-  const { id, title, content } = payload;
-  return { state, [id]: { id, title, content } };
+  const { id, username, author, title, content } = payload;
+  return { ...state, [id]: { id, username, author, title, content } };
 };
 
 const deletePost = (state, payload) => {
@@ -25,7 +29,7 @@ const deletePost = (state, payload) => {
   return newState;
 };
 
-export default (state = [], action) => {
+export default (state = {}, action) => {
   switch (action.type) {
     case GET_ALL_POSTS:
       return getAllPosts(action.payload);

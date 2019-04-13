@@ -1,5 +1,7 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import styled from "styled-components";
+import { createPost } from "../actions";
 
 class New extends Component {
   state = {
@@ -12,18 +14,12 @@ class New extends Component {
   };
 
   onSubmit = e => {
+    const { title, content } = this.state;
+    const { createPost, username, name, idToken, history } = this.props;
+
     e.preventDefault();
 
-    fetch("http://localhost:8000/putPost", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        title: this.state.title,
-        content: this.state.content
-      })
-    }).catch(e => {});
+    createPost(username, name, idToken, title, content, history.push);
   };
 
   render() {
@@ -47,7 +43,18 @@ class New extends Component {
   }
 }
 
-export default New;
+const mapStateToProps = state => ({
+  username: state.signin.username,
+  name: state.signin.name,
+  idToken: state.signin.idToken
+});
+
+const actionsToProps = { createPost };
+
+export default connect(
+  mapStateToProps,
+  actionsToProps
+)(New);
 
 const Input = styled.input`
   border: 1px solid #000;

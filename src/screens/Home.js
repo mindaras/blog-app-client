@@ -9,22 +9,24 @@ class Home extends Component {
   }
 
   renderPosts = () => {
-    return Object.values(this.props.posts).map(({ id, title, content }) => (
-      <li key={id}>
-        <Link
-          to={`/post/${id}`}
-          state={{ title, content }}
-          style={{ textDecoration: "none", color: "#000" }}
-        >
-          <h4>{title}</h4>
-          <p>
-            {content && content.length > 29
-              ? `${content.substring(0, 30)}...`
-              : content}
-          </p>
-        </Link>
-      </li>
-    ));
+    return Object.values(this.props.posts).map(
+      ({ id, author, title, content }) => (
+        <li key={id}>
+          <Link
+            to={`/post/${id}`}
+            style={{ textDecoration: "none", color: "#000" }}
+          >
+            <h2>{title}</h2>
+            <h4>{author}</h4>
+            <p>
+              {content && content.length > 29
+                ? `${content.substring(0, 30)}...`
+                : content}
+            </p>
+          </Link>
+        </li>
+      )
+    );
   };
 
   render() {

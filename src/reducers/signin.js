@@ -4,22 +4,29 @@ const initialState = {
   authorized: false,
   error: false,
   username: "",
+  name: "",
+  idToken: "",
   errorMessage: ""
 };
 
 const clearLocalStorage = () => {
   localStorage.removeItem("username");
-  localStorage.removeItem("accessToken");
   localStorage.removeItem("refreshToken");
 };
 
-const signinUser = ({ username, accessToken, refreshToken, message }) => {
-  if (accessToken) {
+const signinUser = ({ username, name, idToken, refreshToken, message }) => {
+  if (idToken) {
     localStorage.setItem("username", username);
-    localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
 
-    return { authorized: true, error: false, username, errorMessage: "" };
+    return {
+      authorized: true,
+      error: false,
+      username,
+      name,
+      idToken,
+      errorMessage: ""
+    };
   }
 
   clearLocalStorage();
@@ -27,23 +34,29 @@ const signinUser = ({ username, accessToken, refreshToken, message }) => {
   return { authorized: false, error: true, errorMessage: message };
 };
 
-const refreshSession = (state, { username, accessToken, refreshToken }) => {
-  if (accessToken) {
-    localStorage.setItem("accessToken", accessToken);
+const refreshSession = (state, { username, name, idToken, refreshToken }) => {
+  if (idToken) {
     localStorage.setItem("refreshToken", refreshToken);
 
-    return { authorized: true, error: false, username, errorMessage: "" };
+    return {
+      authorized: true,
+      error: false,
+      username,
+      name,
+      idToken,
+      errorMessage: ""
+    };
   }
 
   clearLocalStorage();
 
-  return { ...state, authorized: true };
+  return { ...state, authorized: false };
 };
 
 const signoutUser = state => {
   clearLocalStorage();
 
-  return { ...state, authorized: false };
+  return { ...state, authorized: false, username: "", name: "", idToken: "" };
 };
 
 export default (state = initialState, action) => {

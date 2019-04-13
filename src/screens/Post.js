@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { getPost, updatePost, deletePost } from "../actions";
@@ -18,9 +18,9 @@ class Post extends Component {
   }
 
   componentDidMount() {
-    if (!this.props.post) {
-      this.props.getPost(this.props.match.params.id);
-    }
+    const { post, getPost, match } = this.props;
+
+    if (!post) getPost(match.params.id);
   }
 
   componentDidUpdate(prevProps) {
@@ -33,8 +33,9 @@ class Post extends Component {
   }
 
   onDelete = () => {
-    this.props.deletePost(this.props.match.params.id);
-    this.props.history.push("/");
+    const { deletePost, match, username, idToken, history } = this.props;
+
+    deletePost(match.params.id, username, idToken, history.push);
   };
 
   onChange = e => {
@@ -43,13 +44,30 @@ class Post extends Component {
 
   onSubmit = e => {
     const { title, content } = this.state;
+    const { updatePost, match, username, name, idToken } = this.props;
 
     e.preventDefault();
-    this.props.updatePost(this.props.match.params.id, title, content);
+
+    updatePost(match.params.id, username, name, idToken, title, content);
+
+    this.setState({ updating: false });
   };
 
   onUpdate = () => {
     this.setState({ updating: true });
+  };
+
+  renderButtons = () => {
+    const { post, authorized, username } = this.props;
+
+    if (authorized && post.username === username) {
+      return (
+        <Fragment>
+          <UpdateButton onClick={this.onUpdate}>Update</UpdateButton>
+          <DeleteButton onClick={this.onDelete}>Delete</DeleteButton>
+        </Fragment>
+      );
+    }
   };
 
   render() {
@@ -59,8 +77,7 @@ class Post extends Component {
 
     return (
       <div>
-        <UpdateButton onClick={this.onUpdate}>Update</UpdateButton>
-        <DeleteButton onClick={this.onDelete}>Delete</DeleteButton>
+        {this.renderButtons()}
         <h1>{title}</h1>
         <p>{content}</p>
         {this.state.updating && (
@@ -86,7 +103,11 @@ class Post extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  post: state.posts[ownProps.match.params.id]
+  post: state.posts[ownProps.match.params.id],
+  authorized: state.signin.authorized,
+  username: state.signin.username,
+  name: state.signin.name,
+  idToken: state.signin.idToken
 });
 
 const mapDispatchToProps = { getPost, updatePost, deletePost };

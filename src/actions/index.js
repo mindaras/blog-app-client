@@ -16,7 +16,7 @@ export const getAllPosts = () => dispatch => {
     .catch(e => {});
 };
 
-export const getPost = id => dispatch => {
+export const getPost = (id, author) => dispatch => {
   fetch(`http://localhost:8000/getPost/${id}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" }
@@ -26,25 +26,53 @@ export const getPost = id => dispatch => {
     .catch(e => {});
 };
 
-export const updatePost = (id, title, content) => dispatch => {
+export const createPost = (
+  username,
+  author,
+  idToken,
+  title,
+  content,
+  redirect
+) => dispatch => {
+  fetch("http://localhost:8000/createPost", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, author, idToken, title, content })
+  })
+    .then(data => data.json())
+    .then(payload => redirect(`/post/${payload.id}`))
+    .catch(e => {});
+};
+
+export const updatePost = (
+  id,
+  username,
+  author,
+  idToken,
+  title,
+  content
+) => dispatch => {
   fetch("http://localhost:8000/updatePost", {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id, title, content })
+    body: JSON.stringify({ id, username, author, idToken, title, content })
   })
     .then(data => data.json())
     .then(payload => dispatch({ type: UPDATE_POST, payload }))
     .catch(e => {});
 };
 
-export const deletePost = (id, title, content) => dispatch => {
+export const deletePost = (id, username, idToken, redirect) => dispatch => {
   fetch("http://localhost:8000/deletePost", {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id })
+    body: JSON.stringify({ id, username, idToken })
   })
     .then(data => data.json())
-    .then(payload => dispatch({ type: DELETE_POST, payload }))
+    .then(payload => {
+      dispatch({ type: DELETE_POST, payload });
+      redirect("/");
+    })
     .catch(e => {});
 };
 
