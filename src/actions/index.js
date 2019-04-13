@@ -6,7 +6,8 @@ export const GET_ALL_POSTS = "GET_ALL_POSTS",
   SIGNOUT_USER = "SIGNOUT_USER",
   REFRESH_SESSION = "REFRESH_SESSION";
 
-const ROOT_URL = "ec2-3-120-138-39.eu-central-1.compute.amazonaws.com:8000";
+const ROOT_URL =
+  "http://ec2-3-120-138-39.eu-central-1.compute.amazonaws.com:8000";
 
 export const getAllPosts = () => dispatch => {
   fetch(`${ROOT_URL}/allPosts`, {
