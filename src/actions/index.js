@@ -9,22 +9,22 @@ export const GET_ALL_POSTS = "GET_ALL_POSTS",
 const ROOT_URL =
   "http://ec2-3-120-138-39.eu-central-1.compute.amazonaws.com:8000";
 
+const request = (endpoint, method, body) => {
+  return fetch(`${ROOT_URL}${endpoint}`, {
+    method,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  }).then(data => data.json());
+};
+
 export const getAllPosts = () => dispatch => {
-  fetch(`${ROOT_URL}/allPosts`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" }
-  })
-    .then(data => data.json())
+  request("/allPosts", "GET")
     .then(payload => dispatch({ type: GET_ALL_POSTS, payload }))
     .catch(e => {});
 };
 
 export const getPost = id => dispatch => {
-  fetch(`${ROOT_URL}/getPost/${id}`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" }
-  })
-    .then(data => data.json())
+  request(`/getPost/${id}`, "GET")
     .then(payload => dispatch({ type: UPDATE_POST, payload }))
     .catch(e => {});
 };
@@ -37,12 +37,13 @@ export const createPost = (
   content,
   redirect
 ) => dispatch => {
-  fetch(`${ROOT_URL}/createPost`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, author, idToken, title, content })
+  request("/createPost", "POST", {
+    username,
+    author,
+    idToken,
+    title,
+    content
   })
-    .then(data => data.json())
     .then(payload => redirect(`/post/${payload.id}`))
     .catch(e => {});
 };
@@ -55,23 +56,20 @@ export const updatePost = (
   title,
   content
 ) => dispatch => {
-  fetch(`${ROOT_URL}/updatePost`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id, username, author, idToken, title, content })
+  request("/updatePost", "PUT", {
+    id,
+    username,
+    author,
+    idToken,
+    title,
+    content
   })
-    .then(data => data.json())
     .then(payload => dispatch({ type: UPDATE_POST, payload }))
     .catch(e => {});
 };
 
 export const deletePost = (id, username, idToken, redirect) => dispatch => {
-  fetch(`${ROOT_URL}/deletePost`, {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id, username, idToken })
-  })
-    .then(data => data.json())
+  request("/deletePost", "DELETE", { id, username, idToken })
     .then(payload => {
       dispatch({ type: DELETE_POST, payload });
       redirect("/");
@@ -80,37 +78,22 @@ export const deletePost = (id, username, idToken, redirect) => dispatch => {
 };
 
 export const signupUser = (name, email, password) => dispatch => {
-  fetch(`${ROOT_URL}/signup`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, password, username: email })
-  })
-    .then(data => data.json())
+  request("/signup", "POST", { name, password, username: email })
     .then(payload => dispatch({ type: SIGNUP_USER, payload }))
     .catch(e => {});
 };
 
 export const signinUser = (username, password) => dispatch => {
-  fetch(`${ROOT_URL}/signin`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password })
-  })
-    .then(data => data.json())
+  request("/signin", "POST", { username, password })
     .then(payload => dispatch({ type: SIGNIN_USER, payload }))
     .catch(e => {});
 };
 
 export const refreshSession = () => dispatch => {
-  fetch(`${ROOT_URL}/refreshSession`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username: localStorage.getItem("username"),
-      token: localStorage.getItem("refreshToken")
-    })
+  request("/refreshSession", "POST", {
+    username: localStorage.getItem("username"),
+    token: localStorage.getItem("refreshToken")
   })
-    .then(data => data.json())
     .then(payload => dispatch({ type: REFRESH_SESSION, payload }))
     .catch(e => {});
 };
