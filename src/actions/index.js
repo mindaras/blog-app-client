@@ -6,7 +6,7 @@ export const GET_ALL_POSTS = "GET_ALL_POSTS",
   SIGNOUT_USER = "SIGNOUT_USER",
   REFRESH_SESSION = "REFRESH_SESSION";
 
-const ROOT_URL = "api.mindaugaslazauskas.com";
+const ROOT_URL = "https://api.mindaugaslazauskas.com";
 
 const request = (endpoint, method, body) => {
   return fetch(`${ROOT_URL}${endpoint}`, {
